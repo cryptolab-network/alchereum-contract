@@ -1,0 +1,12 @@
+{
+  "description": "Alchereum Test Project", 
+  "external_url": "https://hodlnft.com", 
+  "image": "https://ipfs.io/ipfs/QmVmFKngeg46n4iUi3hBqy2o4sFtTa3K3B64hSe2DThc9h", 
+  "name": "Alchereum",
+  "attributes": [
+	{
+      "trait_type": "LootBox", 
+      "value": true
+    }
+  ]
+}

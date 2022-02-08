@@ -1,0 +1,8 @@
+{
+  "name": "Alchereum Test Collection",
+  "description": "Alchereum Test collection on Rinkeby network",
+  "image": "https://ipfs.io/ipfs/QmcdHdtnpAZgw2VdjQQHyRzz2ExXNYkMqjcrQYPXfY8qWz",
+  "external_link": "https://hodlnft.com",
+  "seller_fee_basis_points": 650,
+  "fee_recipient": "0x44541A6c3ed49bC7D36CFB464f986899Fa567753"
+}

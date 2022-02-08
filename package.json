@@ -1,0 +1,27 @@
+{
+  "name": "alchereum",
+  "version": "1.0.0",
+  "description": "Alchereum NFT Project",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anonymous",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.4",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "chai": "^4.3.4",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.5.3",
+    "hardhat": "^2.8.2",
+    "hardhat-contract-sizer": "^2.4.0"
+  },
+  "dependencies": {
+    "@alch/alchemy-web3": "^1.1.9",
+    "@openzeppelin/contracts": "^4.4.1",
+    "@pinata/sdk": "^1.1.23",
+    "dotenv": "^11.0.0",
+    "truffle-contract-size": "^2.0.1"
+  }
+}
