@@ -3,30 +3,33 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "./alchereum.sol";
 
-abstract contract KSM is ERC721URIStorage{
-    mapping(address => string) internal _ksmAddress; // owner's ksm address
-
+contract AltStorage is Ownable {
+    mapping(address => string) internal _altAddress; // owner's ksm address
+    Alchereum _alchereum;
     constructor() {
     }
 
-    function setKsmAddress(string memory ksmAddress, uint256 tokenId) public {
-        address tokenOwner = getApproved(tokenId);
-        require(tokenOwner == msg.sender, "Not your NFT");
-        _ksmAddress[msg.sender] = ksmAddress;
+    function setAddress(string memory ksmAddress, uint256 tokenId) public {
+        require(_alchereum.ownerOf(tokenId) == address(msg.sender), "Not your NFT");
+        _altAddress[msg.sender] = ksmAddress;
     }
 
-    function getKsmAddress() public view returns (string memory){
-        return _ksmAddress[msg.sender];
+    function getAddress() public view returns (string memory){
+        return _altAddress[msg.sender];
     }
 
-    function getKsmAddressByTokenId(uint256 tokenId) public view returns (string memory){
-        address tokenOwner = getApproved(tokenId);
-        return _ksmAddress[tokenOwner];
+    function getAddressByTokenId(uint256 tokenId) public view returns (string memory){
+        return _altAddress[_alchereum.ownerOf(tokenId)];
     }
 
-    function deleteKsmAddress() internal {
-        delete _ksmAddress[msg.sender];
+    function deleteAddress() public {
+        delete _altAddress[msg.sender];
+    }
+
+    function setAlchereumContract(Alchereum alc) public onlyOwner {
+        _alchereum = alc;
     }
 }

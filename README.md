@@ -1,5 +1,9 @@
 # Alchereum Contract
 
+## Prereq
+
+You have to get your own Pinata Secret and Web3 API key first.
+
 ## Build
 
 `npx hardhat compile`

@@ -9,17 +9,17 @@ const web3 = createAlchemyWeb3(API_URL)
 const contract = require("../artifacts/contracts/alchereum.sol/Alchereum.json")
 const nftContract = new web3.eth.Contract(contract.abi, process.env.CONTRACT_ADDRESS)
 
-async function _mintNFT() {
+async function withdraw() {
   const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, "latest") //get latest nonce
-
+  // const balance = await nftContract.methods.shares(PUBLIC_KEY).call();
+  // console.log(balance);
   //the transaction
   const tx = {
     from: PUBLIC_KEY,
     to: process.env.CONTRACT_ADDRESS,
     nonce: nonce,
     gas: 500000,
-    data: nftContract.methods.mintNFT(PUBLIC_KEY, 1).encodeABI(),
-    value: 80000000000000000, // 0.08 ether * 3
+    data: nftContract.methods.setAltStorage(process.env.ALTSTORAGE_CONTRACT_ADDRESS).encodeABI(),
   }
 
   const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
@@ -49,16 +49,6 @@ async function _mintNFT() {
   }
 
 (async () => {
-  // const tokenURI = await pinSingleMetadataFromDir('./metadata', 'test.json', `test_${1}`, // nft name
-  // {
-  //   description: 'test', // description
-  //   external_url: 'www.google.com',
-  //   attributes: [
-  //     {
-  //       "trait_type": "Base", 
-  //       "value": "Starfish"
-  //     }
-  //   ], 
-  // });
-  await _mintNFT();
+
+  await withdraw();
 })();

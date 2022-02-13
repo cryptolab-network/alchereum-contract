@@ -3,8 +3,17 @@
 //
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
+require("dotenv").config()
 const hre = require("hardhat");
 
+const API_URL = process.env.API_URL
+const PUBLIC_KEY = process.env.ETH_PUBLIC_KEY
+const PRIVATE_KEY = process.env.ETH_PRIVATE_KEY
+
+const { createAlchemyWeb3 } = require("@alch/alchemy-web3")
+const web3 = createAlchemyWeb3(API_URL)
+
+const contract = require("../artifacts/contracts/ksm.sol/AltStorage.json")
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
@@ -14,12 +23,58 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Alchereum = await hre.ethers.getContractFactory("Alchereum");
+  const WhiteListVerifier = await hre.ethers.getContractFactory("WhiteListVerifier");
+  const wlv = await WhiteListVerifier.deploy();
+
+  await wlv.deployed();
+
+  const Alchereum = await hre.ethers.getContractFactory("Alchereum", {
+    libraries: {
+      WhiteListVerifier: wlv.address,
+    },
+  });
+  const AltStorage = await hre.ethers.getContractFactory("AltStorage");
+  const alt = await AltStorage.deploy();
+  await alt.deployed();
+  console.log("AltStorage deployed to:", alt.address);
+
   const nft = await Alchereum.deploy(["0x44541A6c3ed49bC7D36CFB464f986899Fa567753", "0x0c1cf31A3260c4F5c1e79ba2196617Eb070b6EE5"], [80, 20]);
 
   await nft.deployed();
 
   console.log("Alchereum deployed to:", nft.address);
+    // transfer ownership of AltStorage to Alchereum
+  // const alt = {address: '0xc504550cc74AD92d8A446ABF68503Bf3E9eEaC53'};
+  // const nft = {address: '0xd8376329d9596714aDEC30773eAf9290930cB435'};
+  const nftContract = new web3.eth.Contract(contract.abi, alt.address)
+  const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, "latest") //get latest nonce
+  //the transaction
+  const tx = {
+    from: PUBLIC_KEY,
+    to: alt.address,
+    nonce: nonce,
+    gas: 500000,
+    data: nftContract.methods.transferOwnership(nft.address).encodeABI(),
+  }
+  console.log('transfer the ownership of AltStorage to Alchereum');
+  const signedTx = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
+  await web3.eth.sendSignedTransaction(
+    signedTx.rawTransaction,
+    function (err, hash) {
+      if (!err) {
+        console.log(
+          "The hash of your transaction is: ",
+          hash,
+          "\nCheck Alchemy's Mempool to view the status of your transaction!"
+        )
+      } else {
+        console.log(
+          "Something went wrong when submitting your transaction:",
+          err
+        )
+      }
+    }
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -10,7 +10,21 @@ import "@openzeppelin/contracts/finance/PaymentSplitter.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "./ksm.sol";
 
-contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter, KSM {
+library WhiteListVerifier {
+    using ECDSA for bytes32;
+    function isAuthorized(
+        address contractAddress,
+        address sender,
+        bytes memory signature,
+        address _signerAddress
+    ) public pure returns (bool) {
+        bytes32 message = keccak256(abi.encodePacked(contractAddress, sender));
+        address recoveredAddress = ECDSA.recover(message.toEthSignedMessageHash(), signature);
+        return _signerAddress == recoveredAddress;
+    }
+}
+
+contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter {
     using ECDSA for bytes32;
     using Counters for Counters.Counter;
     using Strings for uint256;
@@ -24,8 +38,19 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter, KSM {
     string private _lootTokenURI =
         "ipfs://QmdxotKEKuELKmVQSB4fx16bt9tGPQcxamcAUQtjySnqrv"; // TODO: must be changed to the real lootbox
     mapping(address => bool) internal _ticketUsed;
+    AltStorage _altStorage;
+    address _altStorageContractAddr;
 
     constructor(address[] memory _payees, uint256[] memory _shares) ERC721("Alchereum", "ALE") PaymentSplitter(_payees, _shares) payable {
+
+    }
+
+    function setAltStorage(
+        address addr
+    ) public onlyOwner {
+        _altStorage = AltStorage(addr);
+        _altStorage.setAlchereumContract(this);
+        _altStorageContractAddr = addr;
     }
 
     function transferFrom(
@@ -34,7 +59,8 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter, KSM {
         uint256 tokenId
     ) public override {
         ERC721.transferFrom(from, to, tokenId);
-        deleteKsmAddress();
+        require(_altStorageContractAddr != address(0));
+        _altStorage.deleteAddress();
     }
 
     function setPaused(bool _paused) public onlyOwner {
@@ -70,27 +96,16 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter, KSM {
         }
     }
 
-    // function mintPrivate(address recipient) public payable onlyOwner
-    //     returns (uint256)
-    // {
-    //     _tokenIds.increment();
-    //     uint256 newItemId = _tokenIds.current();
-    //     require(newItemId > 0 && newItemId < 5000, "Exceeds token supply");
-    //     _mint(recipient, newItemId);
-    //     _setTokenURI(newItemId, _lootTokenURI);
+    function mintPrivate(address recipient) public payable onlyOwner
+        returns (uint256)
+    {
+        _tokenIds.increment();
+        uint256 newItemId = _tokenIds.current();
+        require(newItemId > 0 && newItemId < 5000, "Exceeds token supply");
+        _mint(recipient, newItemId);
+        _setTokenURI(newItemId, _lootTokenURI);
 
-    //     return newItemId;
-    // }
-
-    function isAuthorized(
-        address contractAddress,
-        address sender,
-        bytes memory signature,
-        address _signerAddress
-    ) private pure returns (bool) {
-        bytes32 message = keccak256(abi.encodePacked(contractAddress, sender));
-        address recoveredAddress = ECDSA.recover(message.toEthSignedMessageHash(), signature);
-        return _signerAddress == recoveredAddress;
+        return newItemId;
     }
 
     function presale(
@@ -100,7 +115,7 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter, KSM {
         require(pausePresale == false, "Mint paused");
         require(!_ticketUsed[recipient], "ticket used");
         require(
-            isAuthorized(
+            WhiteListVerifier.isAuthorized(
                 address(this),
                 msg.sender,
                 _signature,
