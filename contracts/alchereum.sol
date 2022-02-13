@@ -57,18 +57,17 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter, KSM {
         return _tokenIds.current();
     }
 
-    function mintNFT(address recipient) public payable
-        returns (uint256)
-    {
+    function mintNFT(address recipient, uint count) public payable {
         require(pauseMint == false, "Mint paused");
-        require(msg.value >= price, "Not enough ETH sent"); 
-        _tokenIds.increment();
-        uint256 newItemId = _tokenIds.current();
-        require(newItemId > 0 && newItemId < 5000, "Exceeds token supply");
-        _mint(recipient, newItemId);
-        _setTokenURI(newItemId, _lootTokenURI);
-
-        return newItemId;
+        require(count <= 10, "Exceed mint count");
+        require(msg.value >= price * count, "Not enough ETH sent"); 
+        for (uint i = 0; i < count; i++) {
+            _tokenIds.increment();
+            uint256 newItemId = _tokenIds.current();
+            require(newItemId > 0 && newItemId < 5000, "Exceeds token supply");
+            _mint(recipient, newItemId);
+            _setTokenURI(newItemId, _lootTokenURI);
+        }
     }
 
     // function mintPrivate(address recipient) public payable onlyOwner
