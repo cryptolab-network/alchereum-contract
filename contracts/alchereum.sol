@@ -13,12 +13,11 @@ import "./ksm.sol";
 library WhiteListVerifier {
     using ECDSA for bytes32;
     function isAuthorized(
-        address contractAddress,
         address sender,
         bytes memory signature,
         address _signerAddress
     ) public pure returns (bool) {
-        bytes32 message = keccak256(abi.encodePacked(contractAddress, sender));
+        bytes32 message = keccak256(abi.encodePacked(sender));
         address recoveredAddress = ECDSA.recover(message.toEthSignedMessageHash(), signature);
         return _signerAddress == recoveredAddress;
     }
@@ -29,10 +28,10 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter {
     using Counters for Counters.Counter;
     using Strings for uint256;
     Counters.Counter private _tokenIds;
-    bool public pauseMint = false;
-    bool public pausePresale = false;
-    uint256 private price = 0.08 ether;
-    uint256 private presalePrice = 0.07 ether;
+    bool public pauseMint = true;
+    bool public pausePresale = true;
+    uint256 public price = 0.08 ether;
+    uint256 public presalePrice = 0.07 ether;
     string private baseURI = "";
     bool private _lootBoxOpened = false;
     string private _lootTokenURI =
@@ -41,9 +40,16 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter {
     AltStorage _altStorage;
     address _altStorageContractAddr;
 
+    address _verifier = owner();
+
     constructor(address[] memory _payees, uint256[] memory _shares) ERC721("Alchereum", "ALE") PaymentSplitter(_payees, _shares) payable {
 
     }
+
+    // function withdraw(uint256 amount) public onlyOwner{
+    //     require(amount >= address(this).balance, "Insufficient Balances");
+    //     payable(msg.sender).transfer(amount);
+    // }
 
     function setAltStorage(
         address addr
@@ -51,16 +57,6 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter {
         _altStorage = AltStorage(addr);
         _altStorage.setAlchereumContract(this);
         _altStorageContractAddr = addr;
-    }
-
-    function transferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) public override {
-        ERC721.transferFrom(from, to, tokenId);
-        require(_altStorageContractAddr != address(0));
-        _altStorage.deleteAddress();
     }
 
     function setPaused(bool _paused) public onlyOwner {
@@ -108,6 +104,10 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter {
         return newItemId;
     }
 
+    function setWhitelistVerifier(address verifier) public onlyOwner {
+        _verifier = verifier;
+    }
+
     function presale(
         address recipient,
         bytes memory _signature
@@ -116,10 +116,9 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter {
         require(!_ticketUsed[recipient], "ticket used");
         require(
             WhiteListVerifier.isAuthorized(
-                address(this),
                 msg.sender,
                 _signature,
-                owner()
+                _verifier
             ),
             "invalid ticket"
         );
@@ -141,6 +140,11 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter {
     function setLootBoxOpened(bool _status) public onlyOwner {
         _lootBoxOpened = _status;
     }
+
+    function setlootTokenURI(string memory uri) public onlyOwner {
+        _lootTokenURI = uri;
+    }
+
     // this function controls how the token URI is constructed
     function tokenURI(uint256 tokenId)
         public

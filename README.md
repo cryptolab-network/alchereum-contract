@@ -4,6 +4,15 @@
 
 You have to get your own Pinata Secret and Web3 API key first.
 
+## End-to-end
+
+`npx hardhat compile`
+`node script/deploy.js`
+
+modify `CONTRACT_ADDRESS` and `ALTSTORAGE_CONTRACT_ADDRESS` in `.env`
+
+
+
 ## Build
 
 `npx hardhat compile`
@@ -59,3 +68,4 @@ data: nftContract.methods.presale(PUBLIC_KEY,
       "0x78aa4ed45ae2eca902324346c10193492406d388b82c113f2ebd31c3fe464c524ed30595fc89afd3fbbe5679219cc12381129681595532cbfbfe1d70aafae0031b").encodeABI(),
 ```
 and run `node script/presale.js`
+
