@@ -1,7 +1,7 @@
 require("dotenv").config()
 const API_URL = process.env.API_URL
-const PUBLIC_KEY = process.env.ETH_PUBLIC_KEY
-const PRIVATE_KEY = process.env.ETH_PRIVATE_KEY
+const PUBLIC_KEY = process.env.ETH_PUBLIC_KEY_PRESALE
+const PRIVATE_KEY = process.env.ETH_PRIVATE_KEY_PRESALE
 
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3")
 const web3 = createAlchemyWeb3(API_URL)
@@ -19,7 +19,7 @@ async function _mintNFT() {
     nonce: nonce,
     gas: 500000,
     data: nftContract.methods.presale(PUBLIC_KEY,
-      "0x78aa4ed45ae2eca902324346c10193492406d388b82c113f2ebd31c3fe464c524ed30595fc89afd3fbbe5679219cc12381129681595532cbfbfe1d70aafae0031b").encodeABI(),
+      "0x90109dd37c9cc170f829532051b215afab8ad77b1eabfadedc37a070426840d239c59f981c6340113ee36b23c59f0425cc7bd1717a0df865e8d0c25163e171121c").encodeABI(),
     value: 70000000000000000, // 0.07 ether
   }
 

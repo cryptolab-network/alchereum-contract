@@ -35,12 +35,12 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter {
     string private baseURI = "";
     bool private _lootBoxOpened = false;
     string private _lootTokenURI =
-        "ipfs://QmdxotKEKuELKmVQSB4fx16bt9tGPQcxamcAUQtjySnqrv"; // TODO: must be changed to the real lootbox
+        "https://ipfs.io/ipfs/QmaLr2dJ6mFLcBuJFaH48UKPwkaQpuKa3825MNn7ShuSqH";
     mapping(address => bool) internal _ticketUsed;
     AltStorage _altStorage;
     address _altStorageContractAddr;
 
-    address _verifier = owner();
+    address public _verifier = owner();
 
     constructor(address[] memory _payees, uint256[] memory _shares) ERC721("Alchereum", "ALE") PaymentSplitter(_payees, _shares) payable {
 
@@ -123,7 +123,7 @@ contract Alchereum is ERC721URIStorage, Ownable, PaymentSplitter {
             "invalid ticket"
         );
     
-        require(msg.value >= price, "Not enough ETH sent"); 
+        require(msg.value >= presalePrice, "Not enough ETH sent"); 
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         require(newItemId > 0 && newItemId < 5000, "Exceeds token supply");
