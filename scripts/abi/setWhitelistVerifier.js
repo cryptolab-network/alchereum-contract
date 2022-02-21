@@ -6,8 +6,8 @@ const PRIVATE_KEY = process.env.ETH_PRIVATE_KEY
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3")
 const web3 = createAlchemyWeb3(API_URL)
 
-const contract = require("../../artifacts/contracts/alchereum.sol/Alchereum.json")
-const nftContract = new web3.eth.Contract(contract.abi, process.env.CONTRACT_ADDRESS)
+const contract = require("../../artifacts/contracts/alchereum.sol/Alchereum.json");
+const nftContract = new web3.eth.Contract(contract.abi,process.env.CONTRACT_ADDRESS)
 
 async function withdraw() {
   const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, "latest") //get latest nonce
@@ -19,12 +19,11 @@ async function withdraw() {
     to: process.env.CONTRACT_ADDRESS,
     nonce: nonce,
     gas: 500000,
-    data: nftContract.methods.setBaseURI("https://ipfs.io/ipfs/QmVTTyK1mwvdcnvi4dgVT9qL2Y6BSsKttaDV2zZvmB7X9a/").encodeABI(),
+    data: nftContract.methods.setWhitelistVerifier('0x44541A6c3ed49bC7D36CFB464f986899Fa567753').encodeABI(),
   }
   console.log(tx);
 }
 
 (async () => {
-
   await withdraw();
 })();

@@ -7,8 +7,8 @@ require("dotenv").config()
 const hre = require("hardhat");
 
 const API_URL = process.env.API_URL
-const PUBLIC_KEY = process.env.ETH_PUBLIC_KEY
-const PRIVATE_KEY = process.env.ETH_PRIVATE_KEY
+const PUBLIC_KEY = process.env.ETH_PUBLIC_KEY_DEPLOY_CONTRACT
+const PRIVATE_KEY = process.env.ETH_PRIVATE_KEY_DEPLOY_CONTRACT
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -40,7 +40,7 @@ async function main() {
   await alt.deployed();
   console.log("AltStorage deployed to:", alt.address);
 
-  const nft = await Alchereum.deploy(["0x44541A6c3ed49bC7D36CFB464f986899Fa567753"], [100]);
+  const nft = await Alchereum.deploy(["0xD2971fE942E8B4Fb94e6D95695E1Dbe9b4Bef4bD"], [100]);
 
   await nft.deployed();
 

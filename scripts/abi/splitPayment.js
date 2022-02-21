@@ -19,7 +19,7 @@ async function withdraw() {
     to: process.env.CONTRACT_ADDRESS,
     nonce: nonce,
     gas: 500000,
-    data: nftContract.methods.setBaseURI("https://ipfs.io/ipfs/QmVTTyK1mwvdcnvi4dgVT9qL2Y6BSsKttaDV2zZvmB7X9a/").encodeABI(),
+    data: nftContract.methods.release(process.env.ETH_PUBLIC_KEY_GNOSIS_OWNER).encodeABI(),
   }
   console.log(tx);
 }

@@ -1,7 +1,7 @@
 require("dotenv").config()
 const API_URL = process.env.API_URL
-const PUBLIC_KEY = process.env.ETH_PUBLIC_KEY
-const PRIVATE_KEY = process.env.ETH_PRIVATE_KEY
+const PUBLIC_KEY = process.env.ETH_PUBLIC_KEY_DEPLOY_CONTRACT
+const PRIVATE_KEY = process.env.ETH_PRIVATE_KEY_DEPLOY_CONTRACT
 
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3")
 const web3 = createAlchemyWeb3(API_URL)
@@ -19,7 +19,7 @@ async function transferOwnership() {
     to: process.env.CONTRACT_ADDRESS,
     nonce: nonce,
     gas: 500000,
-    data: nftContract.methods.transferOwnership('0xD2971fE942E8B4Fb94e6D95695E1Dbe9b4Bef4bD').encodeABI(),
+    data: nftContract.methods.transferOwnership(process.env.ETH_PUBLIC_KEY_GNOSIS_OWNER).encodeABI(),
   }
 
   const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
