@@ -1,8 +1,8 @@
 {
-  "name": "Alchereum Test Collection",
-  "description": "Alchereum Test collection on Rinkeby network",
+  "name": "Alcheneko",
+  "description": "Alchereum NFT",
   "image": "https://ipfs.io/ipfs/QmaKFYceT4PPo6EQ2wrTLRxxKVEyBsk2X3bL57PtA2jGZ4",
-  "external_link": "https://alcheneko.com",
-  "seller_fee_basis_points": 650,
+  "external_link": "https://www.alcheneko.com",
+  "seller_fee_basis_points": 1000,
   "fee_recipient": "0x44541A6c3ed49bC7D36CFB464f986899Fa567753"
 }

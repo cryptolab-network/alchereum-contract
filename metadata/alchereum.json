@@ -1,8 +1,8 @@
 {
-  "description": "Alchereum Test Project", 
-  "external_url": "https://alcheneko.com", 
+  "description": "Alcheneko NFT. All holder MUST fill your KSM address on our website to receive airdropped KSM tokens.", 
+  "external_url": "https://www.alcheneko.com", 
   "image": "https://ipfs.io/ipfs/Qme9QtdTgBscAAwREBCqod6cfgs7P3MosiqizusVRrM9EV", 
-  "name": "Alchereum",
+  "name": "Alcheneko",
   "attributes": [
 	{
       "trait_type": "LootBox", 

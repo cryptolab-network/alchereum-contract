@@ -24,7 +24,7 @@ async function main() {
   const Web3 = require('web3');
   const web3 = new Web3(new Web3.providers.HttpProvider(API_URL));
 
-  const contract = require("../artifacts/contracts/ksm.sol/AltStorage.json")
+  const contract = require("../artifacts/contracts/altStorage.sol/AltStorage.json")
   const WhiteListVerifier = await hre.ethers.getContractFactory("WhiteListVerifier");
   const wlv = await WhiteListVerifier.deploy();
 
@@ -35,46 +35,12 @@ async function main() {
       WhiteListVerifier: wlv.address,
     },
   });
-  const AltStorage = await hre.ethers.getContractFactory("AltStorage");
-  const alt = await AltStorage.deploy();
-  await alt.deployed();
-  console.log("AltStorage deployed to:", alt.address);
 
-  const nft = await Alchereum.deploy(["0xD2971fE942E8B4Fb94e6D95695E1Dbe9b4Bef4bD"], [100]);
+  const nft = await Alchereum.deploy();
 
   await nft.deployed();
 
   console.log("Alchereum deployed to:", nft.address);
-    // transfer ownership of AltStorage to Alchereum
-  const nftContract = new web3.eth.Contract(contract.abi, alt.address)
-  const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, "latest") //get latest nonce
-  //the transaction
-  const tx = {
-    from: PUBLIC_KEY,
-    to: alt.address,
-    nonce: nonce,
-    gas: 500000,
-    data: nftContract.methods.transferOwnership(nft.address).encodeABI(),
-  }
-  console.log('transfer the ownership of AltStorage to Alchereum');
-  const signedTx = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
-  await web3.eth.sendSignedTransaction(
-    signedTx.rawTransaction,
-    function (err, hash) {
-      if (!err) {
-        console.log(
-          "The hash of your transaction is: ",
-          hash,
-          "\nCheck Alchemy's Mempool to view the status of your transaction!"
-        )
-      } else {
-        console.log(
-          "Something went wrong when submitting your transaction:",
-          err
-        )
-      }
-    }
-  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere

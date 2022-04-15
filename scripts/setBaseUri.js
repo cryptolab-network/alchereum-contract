@@ -1,7 +1,10 @@
 require("dotenv").config()
 const API_URL = process.env.API_URL
-const PUBLIC_KEY = process.env.ETH_PUBLIC_KEY
-const PRIVATE_KEY = process.env.ETH_PRIVATE_KEY
+// const PUBLIC_KEY = process.env.ETH_PUBLIC_KEY
+// const PRIVATE_KEY = process.env.ETH_PRIVATE_KEY
+
+const PUBLIC_KEY = process.env.ETH_PUBLIC_KEY_DEPLOY_CONTRACT
+const PRIVATE_KEY = process.env.ETH_PRIVATE_KEY_DEPLOY_CONTRACT
 
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3")
 const web3 = createAlchemyWeb3(API_URL)
@@ -19,7 +22,7 @@ async function withdraw() {
     to: process.env.CONTRACT_ADDRESS,
     nonce: nonce,
     gas: 500000,
-    data: nftContract.methods.setBaseURI("https://ipfs.io/ipfs/QmcWCQdn7LYV7JfucWHpYB2uPtnpJVsrobAkXmy7xGxLpY/").encodeABI(),
+    data: nftContract.methods.setBaseURI("https://ipfs.io/ipfs/QmVTTyK1mwvdcnvi4dgVT9qL2Y6BSsKttaDV2zZvmB7X9a/").encodeABI(),
   }
 
   const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
