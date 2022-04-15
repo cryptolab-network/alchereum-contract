@@ -7,7 +7,6 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-import "./altStorage.sol";
 
 library WhiteListVerifier {
     function isAuthorized(
@@ -94,7 +93,7 @@ contract Alchereum is ERC721URIStorage, Ownable {
             _tokenIds.increment();
             uint256 newItemId = _tokenIds.current();
             require(newItemId > 0 && newItemId < 3000, "Exceeds token supply");
-            _contributed[newItemId] = msg.value;
+            _contributed[newItemId] = 0.48 ether;
             _mint(recipient, newItemId);
             _setTokenURI(newItemId, _lootTokenURI);
         }
@@ -128,7 +127,7 @@ contract Alchereum is ERC721URIStorage, Ownable {
         uint256 newItemId = _tokenIds.current();
         require(newItemId > 0 && newItemId < 5000, "Exceeds token supply");
         _ticketUsed[msg.sender] = true;
-        _contributed[newItemId] = msg.value;
+        _contributed[newItemId] = 0.432 ether;
         _mint(recipient, newItemId);
         _setTokenURI(newItemId, _lootTokenURI);
         
