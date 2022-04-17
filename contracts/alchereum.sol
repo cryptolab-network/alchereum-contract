@@ -24,10 +24,10 @@ contract Alchereum is ERC721URIStorage, Ownable {
     using Strings for uint256;
     Counters.Counter private _tokenIds;
     uint private _rand = 0;
-    bool public pauseMint = false;
-    bool public pausePresale = true;
-    uint256 public presalePrice = 0.08 ether;
-    uint256 public price = 0.08 ether;
+    bool public _pauseMint = false;
+    bool public _pausePresale = true;
+    uint256 public _presalePrice = 0.432 ether;
+    uint256 public _price = 0.48 ether;
     string private baseURI = "";
     bool private _lootBoxOpened = false;
     bool private _refundable = false;
@@ -48,7 +48,7 @@ contract Alchereum is ERC721URIStorage, Ownable {
     }
 
     function refund(uint256[] memory tokens) public payable {
-        require(pauseMint == true, "minting");
+        require(_pauseMint == true, "minting");
         require(_refundable == true, "not refundable");
         require(_tokenIds.current() < 800, "Sold more than 800");
         uint256 total = 0;
@@ -66,11 +66,11 @@ contract Alchereum is ERC721URIStorage, Ownable {
     }
 
     function setPaused(bool _paused) public onlyOwner {
-        pauseMint = _paused;
+        _pauseMint = _paused;
     }
 
     function setPresalePaused(bool _paused) public onlyOwner {
-        pausePresale = _paused;
+        _pausePresale = _paused;
     }
 
     function _baseURI() internal view override returns (string memory) {
@@ -86,9 +86,9 @@ contract Alchereum is ERC721URIStorage, Ownable {
     }
 
     function mintNFT(address recipient, uint count) public payable {
-        require(pauseMint == false, "Mint paused");
+        require(_pauseMint == false, "Mint paused");
         require(count <= 10, "Exceed mint count");
-        require(msg.value >= price * count, "Not enough ETH sent");
+        require(msg.value >= _price * count, "Not enough ETH sent");
         for (uint i = 0; i < count; i++) {
             _tokenIds.increment();
             uint256 newItemId = _tokenIds.current();
@@ -111,7 +111,7 @@ contract Alchereum is ERC721URIStorage, Ownable {
         address recipient,
         bytes32[] memory _signature
     ) public payable returns (uint256) {
-        require(pausePresale == false, "Mint paused");
+        require(_pausePresale == false, "Mint paused");
         require(!_ticketUsed[msg.sender], "ticket used");
         require(
             WhiteListVerifier.isAuthorized(
@@ -122,7 +122,7 @@ contract Alchereum is ERC721URIStorage, Ownable {
             "invalid ticket"
         );
     
-        require(msg.value >= presalePrice, "Not enough ETH sent"); 
+        require(msg.value >= _presalePrice, "Not enough ETH sent"); 
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         require(newItemId > 0 && newItemId < 5000, "Exceeds token supply");
