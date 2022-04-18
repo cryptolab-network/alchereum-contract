@@ -4,11 +4,11 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./alchereum.sol";
+import "./alcheneko.sol";
 
 contract AltStorage is Ownable {
     mapping(address => string) internal _altAddress; // owner's ksm address
-    Alchereum _alchereum;
+    Alcheneko _alchereum;
     constructor() {
     }
 
@@ -29,7 +29,7 @@ contract AltStorage is Ownable {
         delete _altAddress[msg.sender];
     }
 
-    function setAlchereumContract(Alchereum alc) public onlyOwner {
+    function setAlchereumContract(Alcheneko alc) public onlyOwner {
         _alchereum = alc;
     }
 }

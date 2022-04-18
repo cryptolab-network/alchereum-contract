@@ -19,7 +19,7 @@ library WhiteListVerifier {
     }
 }
 
-contract Alchereum is ERC721URIStorage, Ownable {
+contract Alcheneko is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     using Strings for uint256;
     Counters.Counter private _tokenIds;
@@ -30,13 +30,15 @@ contract Alchereum is ERC721URIStorage, Ownable {
     uint256 public _price = 0.48 ether;
     string private baseURI = "";
     bool private _lootBoxOpened = false;
-    bool private _refundable = false;
     bytes32 public _merkleRoot = "";
     string private _lootTokenURI =
         "https://ipfs.io/ipfs/QmaLr2dJ6mFLcBuJFaH48UKPwkaQpuKa3825MNn7ShuSqH";
     address public _verifier;
     mapping(address => bool) internal _ticketUsed;
     mapping(uint256 => uint256) internal _contributed;
+
+    uint256 public _refundStartBlock;
+
     constructor() ERC721("Alcheneko", "ALN") {
 
     }
@@ -49,7 +51,9 @@ contract Alchereum is ERC721URIStorage, Ownable {
 
     function refund(uint256[] memory tokens) public payable {
         require(_pauseMint == true, "minting");
-        require(_refundable == true, "not refundable");
+        require(_pausePresale == true, "minting");
+        // require(_refundable == true, "not refundable");
+        require(block.number >= _refundStartBlock, "not yet refundable");
         require(_tokenIds.current() < 800, "Sold more than 800");
         uint256 total = 0;
         for (uint i = 0; i < tokens.length; i++) {
@@ -61,16 +65,18 @@ contract Alchereum is ERC721URIStorage, Ownable {
         payable(msg.sender).transfer(total);
     }
 
-    function setRefundable(bool refundable) public onlyOwner {
-        _refundable = refundable;
-    }
-
     function setPaused(bool _paused) public onlyOwner {
         _pauseMint = _paused;
+        if (_refundStartBlock == 0) {
+            _refundStartBlock = block.number + 200000;
+        }
     }
 
     function setPresalePaused(bool _paused) public onlyOwner {
         _pausePresale = _paused;
+        if (_refundStartBlock == 0) {
+            _refundStartBlock = block.number + 200000;
+        }
     }
 
     function _baseURI() internal view override returns (string memory) {
