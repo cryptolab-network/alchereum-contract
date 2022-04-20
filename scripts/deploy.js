@@ -30,7 +30,7 @@ async function main() {
 
   await wlv.deployed();
 
-  const Alchereum = await hre.ethers.getContractFactory("Alchereum", {
+  const Alchereum = await hre.ethers.getContractFactory("Alcheneko", {
     libraries: {
       WhiteListVerifier: wlv.address,
     },
@@ -40,7 +40,8 @@ async function main() {
 
   await nft.deployed();
 
-  console.log("Alchereum deployed to:", nft.address);
+  console.log("Alcheneko deployed to:", nft.address);
+  console.log("Whitelist Verifier deployed to:", wlv.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

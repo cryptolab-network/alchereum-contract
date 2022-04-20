@@ -24,7 +24,7 @@ contract Alcheneko is ERC721URIStorage, Ownable {
     using Strings for uint256;
     Counters.Counter private _tokenIds;
     uint private _rand = 0;
-    bool public _pauseMint = false;
+    bool public _pauseMint = true;
     bool public _pausePresale = true;
     uint256 public _presalePrice = 0.432 ether;
     uint256 public _price = 0.48 ether;
@@ -32,19 +32,21 @@ contract Alcheneko is ERC721URIStorage, Ownable {
     bool private _lootBoxOpened = false;
     bytes32 public _merkleRoot = "";
     string private _lootTokenURI =
-        "https://ipfs.io/ipfs/QmaLr2dJ6mFLcBuJFaH48UKPwkaQpuKa3825MNn7ShuSqH";
+        "https://gateway.pinata.cloud/ipfs/QmNx9fqjhn9oHX7TskctPfUZov69sVXv8m88uDcy49NzEG";
     address public _verifier;
     mapping(address => bool) internal _ticketUsed;
     mapping(uint256 => uint256) internal _contributed;
 
     uint256 public _refundStartBlock;
+    uint public _refundThreshold = 800;
+    uint public _supply = 4000;
 
     constructor() ERC721("Alcheneko", "ALN") {
 
     }
 
     function withdraw(uint256 amount) public onlyOwner{
-        require(_tokenIds.current() >= 800, "Cannot withdraw");
+        require(_tokenIds.current() >= _refundThreshold, "Cannot withdraw");
         require(amount <= address(this).balance, "Insufficient Balances");
         payable(msg.sender).transfer(amount);
     }
@@ -54,10 +56,11 @@ contract Alcheneko is ERC721URIStorage, Ownable {
         require(_pausePresale == true, "minting");
         // require(_refundable == true, "not refundable");
         require(block.number >= _refundStartBlock, "not yet refundable");
-        require(_tokenIds.current() < 800, "Sold more than 800");
+        require(_tokenIds.current() < _refundThreshold, "Sold more than 800");
         uint256 total = 0;
         for (uint i = 0; i < tokens.length; i++) {
             require(ownerOf(tokens[i]) == msg.sender, "not token owner");
+            require(_contributed[tokens[i]] > 0, "already withdrew");
             total += _contributed[tokens[i]];
             _contributed[tokens[i]] = 0;
         }
@@ -98,8 +101,8 @@ contract Alcheneko is ERC721URIStorage, Ownable {
         for (uint i = 0; i < count; i++) {
             _tokenIds.increment();
             uint256 newItemId = _tokenIds.current();
-            require(newItemId > 0 && newItemId < 3000, "Exceeds token supply");
-            _contributed[newItemId] = 0.48 ether;
+            require(newItemId > 0 && newItemId <= _supply, "Exceeds token supply");
+            _contributed[newItemId] = _price;
             _mint(recipient, newItemId);
             _setTokenURI(newItemId, _lootTokenURI);
         }
@@ -131,9 +134,9 @@ contract Alcheneko is ERC721URIStorage, Ownable {
         require(msg.value >= _presalePrice, "Not enough ETH sent"); 
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
-        require(newItemId > 0 && newItemId < 5000, "Exceeds token supply");
+        require(newItemId > 0 && newItemId <= _supply, "Exceeds token supply");
         _ticketUsed[msg.sender] = true;
-        _contributed[newItemId] = 0.432 ether;
+        _contributed[newItemId] = _presalePrice;
         _mint(recipient, newItemId);
         _setTokenURI(newItemId, _lootTokenURI);
         
@@ -145,10 +148,12 @@ contract Alcheneko is ERC721URIStorage, Ownable {
     }
 
     function setLootBoxOpened(bool _status) public onlyOwner {
+        require(_rand != 0, "rand a number first");
         _lootBoxOpened = _status;
     }
 
     function setTokenRandom(bytes32 _hash) public onlyOwner {
+        require(_rand == 0, "only once");
         _rand = uint(_hash);
     }
 
@@ -173,7 +178,7 @@ contract Alcheneko is ERC721URIStorage, Ownable {
             return
                 bytes(baseURI).length > 0
                     ? string(
-                        abi.encodePacked(__baseURI, ((tokenId + _rand)%4000).toString(), ".json")
+                        abi.encodePacked(__baseURI, ((tokenId + _rand)%_supply).toString(), ".json")
                     )
                     : "";
         } else {
@@ -182,6 +187,6 @@ contract Alcheneko is ERC721URIStorage, Ownable {
     }
 
     function contractURI() public pure returns (string memory) {
-        return "ipfs://Qmbxdqrj7JYZLLie61QzgMYPBBQ46qG8aJmNjgSZaqJM6R";
+        return "ipfs://QmPvhGd5R1DbEjZbcVhBkRJtCzyFGUqEedSC6ZcBcRkJ3B";
     }
 }
