@@ -36,7 +36,7 @@ contract Alcheneko is ERC721, Ownable {
     bool private _lootBoxOpened = false;
     string private baseURI = "";
     string private _contractURI =
-        "https://gateway.pinata.cloud/ipfs://QmPvhGd5R1DbEjZbcVhBkRJtCzyFGUqEedSC6ZcBcRkJ3B";
+        "https://gateway.pinata.cloud/ipfs/QmPvhGd5R1DbEjZbcVhBkRJtCzyFGUqEedSC6ZcBcRkJ3B";
     string private _lootTokenURI =
         "https://gateway.pinata.cloud/ipfs/QmNx9fqjhn9oHX7TskctPfUZov69sVXv8m88uDcy49NzEG";
 
