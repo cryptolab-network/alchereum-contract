@@ -1,0 +1,12 @@
+{
+  "description": "Alcheneko NFT. An NFT which generate long term and stable profits for you. All holders MUST fill your KSM address on https://www.alcheneko.com to receive airdropped KSM tokens.",
+  "external_url": "https://www.alcheneko.com",
+  "image": "ipfs://QmcSRdNw8XpYgVb44XjXzs5heN7XdmffxG4w4vox7nqWdQ",
+  "name": "Alcheneko",
+  "attributes": [
+    {
+      "trait_type": "LootBox",
+      "value": true
+    }
+  ]
+}

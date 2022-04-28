@@ -1,0 +1,8 @@
+{
+  "name": "Alcheneko",
+  "description": "Alcheneko NFT. An NFT which generate long term and stable profits for you. All holders MUST fill your KSM address on https://www.alcheneko.com to receive airdropped KSM tokens.",
+  "image": "ipfs://QmaCt2Yj2T3bsiccwKqmVh67qNEJ3fDhXaEUmqzMpGJLhi",
+  "external_link": "https://www.alcheneko.com",
+  "seller_fee_basis_points": 1000,
+  "fee_recipient": "0xD2971fE942E8B4Fb94e6D95695E1Dbe9b4Bef4bD" //修改
+}
