@@ -174,7 +174,7 @@ contract Alcheneko is ERC721, Ownable {
                     ? string(
                         abi.encodePacked(
                             __baseURI,
-                            ((tokenId + _rand) % _supply).toString(),
+                            ((tokenId + _rand) % _supply + 1).toString(),
                             ".json"
                         )
                     )
