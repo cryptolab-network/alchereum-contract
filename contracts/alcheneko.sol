@@ -23,9 +23,9 @@ contract Alcheneko is ERC721, Ownable {
     using Strings for uint256;
 
     uint256 public constant _supply = 4000;
-    uint256 public constant _refundThreshold = 10;
-    uint256 public constant _presalePrice = 0.07 ether;
-    uint256 public constant _price = 0.08 ether;
+    uint256 public constant _refundThreshold = 800;
+    uint256 public constant _presalePrice = 0.432 ether;
+    uint256 public constant _price = 0.48 ether;
     uint256 public _refundStartBlock;
     bytes32 public _merkleRoot = "";
     bool public _pauseMint = true;
@@ -107,14 +107,14 @@ contract Alcheneko is ERC721, Ownable {
     function setPaused(bool _paused) public onlyOwner {
         _pauseMint = _paused;
         if (_refundStartBlock == 0) {
-            _refundStartBlock = block.number + 5;
+            _refundStartBlock = block.number + 200000;
         }
     }
 
     function setPresalePaused(bool _paused) public onlyOwner {
         _pausePresale = _paused;
         if (_refundStartBlock == 0) {
-            _refundStartBlock = block.number + 5;
+            _refundStartBlock = block.number + 200000;
         }
     }
 
