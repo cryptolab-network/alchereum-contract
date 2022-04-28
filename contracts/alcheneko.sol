@@ -1,4 +1,4 @@
-//Contract based on [https://docs.openzeppelin.com/contracts/3.x/erc721](https://docs.openzeppelin.com/contracts/3.x/erc721)
+// Contract based on [https://docs.openzeppelin.com/contracts/4.x/erc721](https://docs.openzeppelin.com/contracts/4.x/erc721)
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -22,11 +22,11 @@ contract Alcheneko is ERC721, Ownable {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
-    uint256 public _supply = 4000;
+    uint256 public constant _supply = 4000;
+    uint256 public constant _refundThreshold = 800;
+    uint256 public constant _presalePrice = 0.432 ether;
+    uint256 public constant _price = 0.48 ether;
     uint256 public _refundStartBlock;
-    uint256 public _refundThreshold = 800;
-    uint256 public _presalePrice = 0.432 ether;
-    uint256 public _price = 0.48 ether;
     bytes32 public _merkleRoot = "";
     bool public _pauseMint = true;
     bool public _pausePresale = true;
@@ -86,7 +86,6 @@ contract Alcheneko is ERC721, Ownable {
     function refund(uint256[] memory tokens) public payable {
         require(_pauseMint == true, "minting");
         require(_pausePresale == true, "minting");
-        // require(_refundable == true, "not refundable");
         require(block.number >= _refundStartBlock, "not yet refundable");
         require(_tokenIds.current() < _refundThreshold, "Sold more than 800");
         uint256 total = 0;
@@ -96,7 +95,7 @@ contract Alcheneko is ERC721, Ownable {
             total += _contributed[tokens[i]];
             _contributed[tokens[i]] = 0;
         }
-        // require(total > 0)
+        require(total > 0, "already withdrew");
         require(address(this).balance >= total, "Insufficient Balances");
         payable(msg.sender).transfer(total);
     }
@@ -174,7 +173,7 @@ contract Alcheneko is ERC721, Ownable {
                     ? string(
                         abi.encodePacked(
                             __baseURI,
-                            ((tokenId + _rand) % _supply).toString(),
+                            (((tokenId + _rand) % _supply) + 1).toString(),
                             ".json"
                         )
                     )
