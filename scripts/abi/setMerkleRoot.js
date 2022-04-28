@@ -19,7 +19,7 @@ async function withdraw() {
     to: process.env.CONTRACT_ADDRESS,
     nonce: nonce,
     gas: 500000,
-    data: nftContract.methods.setMerkleRoot('0x13ae56173d280a7f5bcb8206c07518de6d111cbfd4ad3ef1ca0b4f448c30172c').encodeABI(),
+    data: nftContract.methods.setMerkleRoot('0x2b6ffee00709396643439abf568460ab0599d412e89e986ed8f3b82e86cdd375').encodeABI(),
   }
   console.log(tx);
 }

@@ -19,7 +19,7 @@ async function withdraw() {
     to: process.env.CONTRACT_ADDRESS,
     nonce: nonce,
     gas: 500000,
-    data: nftContract.methods.setPaused(true).encodeABI(),
+    data: nftContract.methods.setPaused(false).encodeABI(),
   }
   console.log(tx);
   }

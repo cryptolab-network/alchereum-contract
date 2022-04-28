@@ -19,7 +19,7 @@ async function withdraw() {
     to: process.env.CONTRACT_ADDRESS,
     nonce: nonce,
     gas: 500000,
-    data: nftContract.methods.setPresalePaused(true).encodeABI(),
+    data: nftContract.methods.setTokenRandom('0x7de5717ae4e969399593c20618bc06151a3c948bc234a6ee6318ccda7930b705').encodeABI(),
   }
 
   const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)

@@ -18,7 +18,7 @@ async function withdraw() {
     to: process.env.CONTRACT_ADDRESS,
     nonce: nonce,
     gas: 500000,
-    data: nftContract.methods.refund(["1", "2"]).encodeABI(),
+    data: nftContract.methods.refund(["3", "5"]).encodeABI(),
   }
 
   const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)

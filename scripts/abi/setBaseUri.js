@@ -19,7 +19,7 @@ async function withdraw() {
     to: process.env.CONTRACT_ADDRESS,
     nonce: nonce,
     gas: 500000,
-    data: nftContract.methods.setBaseURI("https://gateway.pinata.cloud/ipfs/QmcZjo6Yg8HfCERWiTihbYieFeAezMydW4kBVppqcAXZPT/").encodeABI(),
+    data: nftContract.methods.setBaseURI("https://gateway.pinata.cloud/ipfs/QmPW4Vp2KyfBAE5mX1X8BgBaQaRxa745mxS7FzTcmH7fCf/").encodeABI(),
   }
   console.log(tx);
 }

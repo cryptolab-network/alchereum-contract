@@ -19,8 +19,11 @@ async function _mintNFT() {
     nonce: nonce,
     gas: 500000,
     data: nftContract.methods.presale(PUBLIC_KEY,
-      "0x90109dd37c9cc170f829532051b215afab8ad77b1eabfadedc37a070426840d239c59f981c6340113ee36b23c59f0425cc7bd1717a0df865e8d0c25163e171121c").encodeABI(),
-    value: 70000000000000000, // 0.07 ether
+      [
+        "0xacc246a5621622d1a22d399c0d9487bfb99fdb19b7aca4b032932ccf3f121746",
+        "0x4b5c11eb4e38672c016353324ea5117f5b723db46055f7b2b9c8dbc3e0ff3705"
+    ]).encodeABI(),
+    value: 432000000000000000, // 0.432 ether
   }
 
   const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)

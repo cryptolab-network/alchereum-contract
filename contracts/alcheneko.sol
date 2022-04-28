@@ -23,16 +23,16 @@ contract Alcheneko is ERC721, Ownable {
     using Strings for uint256;
 
     uint256 public constant _supply = 4000;
-    uint256 public constant _refundThreshold = 800;
-    uint256 public constant _presalePrice = 0.432 ether;
-    uint256 public constant _price = 0.48 ether;
+    uint256 public constant _refundThreshold = 10;
+    uint256 public constant _presalePrice = 0.07 ether;
+    uint256 public constant _price = 0.08 ether;
     uint256 public _refundStartBlock;
     bytes32 public _merkleRoot = "";
     bool public _pauseMint = true;
     bool public _pausePresale = true;
 
     Counters.Counter private _tokenIds;
-    uint256 private _rand = 0;
+    uint256 public _rand = 0;
     bool private _lootBoxOpened = false;
     string private baseURI = "";
     string private _contractURI =
@@ -107,14 +107,14 @@ contract Alcheneko is ERC721, Ownable {
     function setPaused(bool _paused) public onlyOwner {
         _pauseMint = _paused;
         if (_refundStartBlock == 0) {
-            _refundStartBlock = block.number + 200000;
+            _refundStartBlock = block.number + 5;
         }
     }
 
     function setPresalePaused(bool _paused) public onlyOwner {
         _pausePresale = _paused;
         if (_refundStartBlock == 0) {
-            _refundStartBlock = block.number + 200000;
+            _refundStartBlock = block.number + 5;
         }
     }
 
@@ -156,6 +156,13 @@ contract Alcheneko is ERC721, Ownable {
 
     function _isLootBoxOpened() internal view returns (bool) {
         return _lootBoxOpened;
+    }
+
+    function getTokenRandomId(uint256 tokenId)
+        public
+        view
+        returns (uint256) {
+        return ((tokenId + _rand) % _supply) + 1;
     }
 
     function tokenURI(uint256 tokenId)
