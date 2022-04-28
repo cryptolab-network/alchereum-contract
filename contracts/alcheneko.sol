@@ -121,7 +121,7 @@ contract Alcheneko is ERC721, Ownable {
     function withdraw(uint256 amount) public onlyOwner {
         require(_tokenIds.current() >= _refundThreshold, "Cannot withdraw");
         require(amount <= address(this).balance, "Insufficient Balances");
-        payable(msg.sender).transfer(amount); // 限制在 owner?
+        payable(msg.sender).transfer(amount);
     }
 
     function setContractURI(string memory _newContractURI) public onlyOwner {
